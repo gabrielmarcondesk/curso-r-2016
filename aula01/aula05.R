@@ -34,3 +34,14 @@ mtcars %>%
 
 ajuste_lm_completo <- lm(mpg ~ ., data = mtcars)
 step(ajuste_lm_completo, direction = "forward")
+
+
+install.packages("tree")
+
+library(tree)
+
+ajuste_tree <- tree(factor(am) ~ wt, data = mtcars)
+summary(ajuste_tree)
+
+plot(ajuste_tree)
+text(ajuste_tree, pretty = 0)
