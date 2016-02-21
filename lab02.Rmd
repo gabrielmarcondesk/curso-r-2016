@@ -1,0 +1,112 @@
+---
+title: "lab02"
+author: "Gabriel Marcondes e Rafael Koraicho"
+date: "February 21, 2016"
+output: html_document
+---
+
+# Leitura de dados 
+
+```{r}
+library(readr)
+library(httr)
+library(xml2)
+library(rvest)
+
+pnud <- 'C:/Users/Rafael/Desktop/dados/pnud2_linux.csv'
+pnud2_linuxcsv <- read.csv("C:/Users/Rafael/Desktop/dados/pnud2_linux.csv", header = TRUE, sep="\t", dec = ",")
+
+pnud <- 'C:/Users/Rafael/Desktop/dados/pnud2_win.csv'
+pnud2_wincsv <- read.csv("C:/Users/Rafael/Desktop/dados/pnud2_win.csv",  header = TRUE, sep="\t", dec = ",")
+
+pnud <- 'C:/Users/Rafael/Desktop/dados/pnud_linux.csv'
+pnud_linuxcsv <- read.csv("C:/Users/Rafael/Desktop/dados/pnud_linux.csv", header = TRUE, sep="\t", dec = ",")
+
+pnud <- 'C:/Users/Rafael/Desktop/dados/pnud_win.csv'
+pnud_wincsv <- read.csv("C:/Users/Rafael/Desktop/dados/pnud_win.csv", header = TRUE, sep="\t", dec = ",")
+
+pnud <- 'C:/Users/Rafael/Desktop/dados/pnud_win.txt'
+pnud_wintxt <- read.table("C:/Users/Rafael/Desktop/dados/pnud_win.txt", header = TRUE, sep="\t", dec = ",")
+
+pnud <- 'C:/Users/Rafael/Desktop/dados/pnud_linux.txt'
+pnud_linuxtxt <- read.table("C:/Users/Rafael/Desktop/dados/pnud_linux.txt", header = TRUE, sep="\t", dec = ",")
+
+pnud <- 'C:/Users/Rafael/Desktop/dados/pnud.rds'
+pnud_rds <- readRDS(file = pnud)
+
+pnud <- 'C:/Users/Rafael/Desktop/dados/pnud.rda'
+pnud_rda <- read.table(file = pnud, numerals = c(na.strings = "NA", skipNul = FALSE))
+
+summary(pnud_rds, digits = 10)
+summary(pnud_rda, digits = 10)
+summary(pnud_linuxcsv, digits = 10)
+summary(pnud_linuxtxt, digits = 10)
+Summary(pnud_wincsv, digits = 10)
+summary(pnud_wintxt, digits = 10)
+summary(pnud2_wincsv, digits = 10)
+summary(pnud2_linuxcsv, digits = 10)
+```
+
+# Parte 2: descritiva básica
+
+
+```{r eval=FALSE}
+link_pnud <- 'https://www.dropbox.com/s/seqctcl46qeemgu/pnud_simplificado.rds?dl=1'
+tmp <- tempfile()
+httr::GET(link_pnud, httr::write_disk(tmp))
+pnud <- readRDS(tmp)
+file.remove(tmp)
+``` 
+
+## Questões
+
+### Quais são os seis municípios com os maiores IDH municipais em 2010
+
+```{r}
+pnud %>% 
+  select(ano, municipio, idhm) %>%
+  filter(ano == 2010) %>%
+  arrange(desc(idhm)) %>%
+  head(6)
+```
+
+### Qual é a unidade federativa com menor expectativa de vida média, ponderada pela população dos municípios em 2000.
+
+```{r}
+pnud %>%
+  mutate(x = sum(espvida*pesotot)/sum(pesotot)) %>%
+  select(ano, ufn, espvida, pesotot, x) %>%
+  filter(ano == 2000)  
+```
+
+### Quais são os municípios outliers com relação ao índice de Gini em 1991 e em 2010 
+```{r}
+pnud %>%
+  mutate(outliers = mean(gini) + 2 * sd(gini)) %>%
+  select(ano, municipio, gini, outliers) %>%
+  filter(ano == 1991)
+
+pnud %>%
+  mutate(outliers = mean(gini) + 2 * sd(gini)) %>%
+  select(ano, municipio, gini, outliers) %>%
+  filter(ano == 2010)
+```
+
+### Categorize a renda per capita e associe com a expectativa de vida.
+
+```{r}
+# complete aqui
+```
+
+### No nordeste o aumento de distribuição de renda foi maior do que no sudeste?
+
+```{r}
+# complete aqui
+```
+
+### Insira mais pelo menos 3 estudos que você ache interessante.
+
+```{r}
+# complete aqui
+```
+

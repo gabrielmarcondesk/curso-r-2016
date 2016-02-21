@@ -1,0 +1,143 @@
+---
+title: "lab04"
+author: "Gabriel Marcondes e Rafael Koraicho"
+date: "February 21, 2016"
+output: html_document
+--- 
+
+## Sobre ggplot2
+
+```{r}
+data(diamonds)
+diamonds <- diamonds %>% tbl_df
+```
+
+## geom_point
+
+**1.** Quais são os aspectos estéticos (aesthetics) exigidos (obrigatórios) da função geom_point()?
+
+**Resposta:** help(geom_point)
+"Os pontos a serem plotados no gráfico (x,y)."
+
+**2.** Faça um gráfico de dispersão do preço (price) pela variável quilates (carat). Utilize as funções xlab() e ylab() para trocar os labels dos eixos x e y, respectivamente.
+
+```{r}
+ggplot(data = diamonds, aes(x = price, y = carat)) + 
+  geom_point() +
+  xlab("Preço") +
+  ylab("Quilates")
+```
+
+
+**3.** Utilize a facets para fazer gráficos de dispersão do preço pela variável quilate (o mesmo gráfico do exercício 1) para cada nível da variável claridade (clarity).
+
+```{r}
+ggplot(data = diamonds, aes(x = price, y = carat, colour = clarity)) + 
+  geom_point() +
+  xlab("Preço") +
+  ylab("Quilates") +
+  facet_grid(~clarity)
+```
+
+
+### geom_histogram
+
+**4.** Quais são os aspectos estéticos (aesthetics) exigidos (obrigatórios) da função geom_histogram()?
+
+**Resposta:** help(geom_histogram)
+"O ponto a serem plotado no gráfico (x)"
+
+**5.** Faça um histograma da variável preço. Modifique a cor das barras de forma que elas não pareçam grudadas umas nas outras.
+
+```{r}
+ggplot(diamonds, aes(x = price)) +
+  geom_histogram(color = "white")
+```
+
+
+**6.** Utilize a função geom_density() para adicionar ao gráfico anterior uma estimativa suavizada da densidade.?
+
+```{r}
+ggplot(diamonds, aes(x = price)) +
+  geom_histogram(aes(y=..density..), color = "white") +
+    geom_density(stat = "density", na.rm = FALSE, inherit.aes = FALSE)
+
+```
+
+
+### geom_boxplot
+
+**7.** Quais são os aspectos estéticos (*aesthetics*) exigidos (obrigatórios) da função `geom_boxplot()`?
+
+**Resposta:** help(geom_boxplot)
+"O ponto a serem plotado no gráfico (x), o ponto medio, ponto de minimo, ponto de máximo, y máximo e y mínimo"
+
+
+**8.** Faça boxplots da variável preço coloridos de acordo com a variável corte (cut)
+
+```{r}
+ggplot(diamonds, aes(x = cut, y = price, colour = cut)) +
+  geom_boxplot()
+ 
+ggplot(diamonds, aes(x = as.factor(price), y = cut, colour = as.factor(price))) + 
+  geom_boxplot()
+```
+
+
+### geom_bar
+
+**10.** Quais são os aspectos estéticos (*aesthetics*) exigidos (obrigatórios) da função `geom_bar()`?
+
+**Resposta:** help(geom_bar)
+"o ponto a ser plotado no gráfico (x)"
+
+**11.** Faça um gráfico de barras do número de diamantes em cada categoria da variável cor (*color*).
+
+```{r}
+ggplot(diamonds, aes(x = color)) +
+  geom_bar()
+```
+
+
+# Outra base de dados
+## ECONOMICS
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(lubridate)
+head(economics)
+
+```
+
+**12** Faça um gráfico de dispersão do número de desempregados (eixo x) pelo tempo médio de desemprego (eixo y). Não se esqueça de alterar o label dos eixos.
+
+```{r}
+ggplot(economics, aes(x = unemploy, y = uempmed)) +
+  geom_point() +
+  xlab("Desemprego") +
+  ylab("Tempo Medio de Desemprego")
+```
+
+**13** Faça o mesmo gráfico do exercício anterior, no entanto, os pontos devem ter cores diferentes para cada ano, seguindo uma escala contínua.
+
+```{r}
+ggplot(economics, aes(x = unemploy, y = uempmed, colour = as.factor(year(date)))) +
+  geom_point() +
+  xlab("Desemprego") +
+  ylab("Tempo Medio de Desemprego")
+```
+
+**14** Faça um gráfico de linha do número de desempregados (eixo y) e a data (eixo x).
+
+```{r}
+ggplot(economics, aes(x = date, y = unemploy)) +
+  geom_line()
+```
+
+**15** Repita o gráfico anterior, no entanto desta vez a periodicidade deve ser anual e o valor apresentado no eixo y deve ser o número médio de desempregados.
+
+```{r}
+ggplot(economics, aes(x = date, y = unemploy)) +
+  geom_line()
+```

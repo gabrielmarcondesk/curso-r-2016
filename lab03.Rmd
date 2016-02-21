@@ -1,0 +1,182 @@
+---
+title: "lab03"
+author: "Gabriel Marcondes e Rafael Koraicho"
+date: "February 21, 2016"
+output: html_document
+--- 
+
+# Questões iniciais
+
+## Sobre dplyr e tidyr
+
+```{r}
+library(nycflights13)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(lubridate)
+library(stringr)
+```
+
+
+```{r}
+flights <- tbl_df(flights)
+```
+
+### filter
+
+1. Atribua a uma tabela apenas os voos de janeiro de 2013.
+
+```{r}
+flights %>%
+  filter(year==2013, month==1)
+```
+
+2. Atribua a uma tabela apenas os voos de janeiro ou fevereiro de 2013.
+
+```{r}
+flights %>%
+  filter(year==2013,month = 1|2)
+```
+
+
+3. Atribua a uma tabela apenas os vôos com distância maior do que 1000 milhas.
+
+```{r}
+flights %>%
+  filter(distance > 1000)
+```
+
+### select
+
+1. Atribua a uma tabela apenas as colunas `month` e `dep_delay`.
+
+```{r}
+flights %>%
+  select(month, dep_delay)
+```
+
+
+2. Atribua a uma tabela apenas as colunas `month` e `dep_delay`, os nomes dessas colunas devem ser `mes`e `atraso`.
+
+```{r}
+# código aqui
+```
+
+
+3. Retire da tabela as colunas `tailnum`, `origin` e `dest`
+
+```{r}
+flights %>%
+  select(-tailnum, -origin, -dest)
+```
+
+
+
+### mutate
+
+1. Calcule as colunas `ganho_de_tempo` que é dado por `dep_delay - arr_delay` e `velocidade` dada por `distance / air_time * 60`.
+
+
+```{r}
+flights %>%
+  mutate(ganho_de_tempo = dep_delay - arr_delay, 
+         velocidade = distance / air_time * 60)
+```
+
+
+
+2. Calcule o horário de chegada considerando as colunas `hour`, `minute` e `air_time`. A tabela deve conter duas colunas novas: `hour2` com a hora de chegada e `minute2` com o minuto de chegada.
+
+```{r}
+# código aqui
+```
+
+### summarise
+
+1. Calcule a média da distância de todos os vôos.
+
+```{r}
+flights %>%
+  summarise(media_voos=mean(distance))
+```
+
+2. Calcule a média da distância dos vôos por mês.
+
+```{r}
+flights %>%
+  group_by(month) %>%
+  summarise(media_voos=mean(distance))
+```
+
+3. Calcule a média, mediana, primeiro quartil e terceiro quartil do tempo de viagem por mês.
+
+```{r}
+flights %>%
+  group_by(month) %>%
+  summarise(media_voos=mean(air_time, na.rm = TRUE),
+            mediana_voos=median(air_time, na.rm = TRUE),
+            primeiro_quartil=quantile(air_time, probs = 0.25, na.rm = TRUE),
+                       terceiro_quantil=quantile(air_time, probs = 0.75, na.rm = TRUE))
+```
+
+
+### arrange
+
+1. Ordene a base de dados pelo atraso na partida em ordem crescente.
+
+```{r}
+flights %>%
+  arrange(dep_delay)
+```
+
+
+2. Repita a questão anterior, porém na ordem decrescente.
+
+```{r}
+flights %>%
+  arrange(desc(dep_delay))
+```
+
+
+
+### spread
+
+1. Crie uma tabela em que cada linha é um dia e cada coluna é o atraso médio de partida por mês.
+
+```{r}
+flights %>%
+  group_by(day, dep_delay) %>%
+  summarise(media_atrasos = rowMeans(dep_delay, month, na.rm = FALSE, dims = 1)) %>%
+  ungroup() %>%
+  spread(day, media_atrasos)
+```
+
+2. Repita a mesma operação, mas dessa vez cada coluna será uma hora do dia.
+
+```{r}
+flights %>%
+  group_by(hour, dep_delay) %>%
+  summarise(media_atrasos = colMeans(dep_delay, month, na.rm = FALSE, dims = 1)) %>%
+  ungroup() %>%
+  spread(hour, media_atrasos)
+```
+
+### gather
+
+Considerando as tabelas criadas nas perguntas sobre o `spread`:
+
+1. Transforme-as em um formato tidy.
+
+```{r}
+flights %>%
+  select(day, dep_delay) %>%
+  summarise(media_atrasos = colMeans(dep_delay, month, na.rm = FALSE, dims = 1)) %>%
+  gather(dia = day, mês = moth)
+```
+
+
+```{r}
+# código aqui
+```
+
