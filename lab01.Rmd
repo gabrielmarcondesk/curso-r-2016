@@ -1,9 +1,13 @@
 ---
-title: "Laboratorio 1"
-author: "Curso R de verão 2016"
-date: "18 de janeiro de 2016"
+title: "lab01"
+author: "Gabriel Marcondes e Rafael Koraicho"
+date: "February 21, 2016"
 output: html_document
----
+--- 
+
+# Questões iniciais
+
+##FUNCAO MOEDA COM PROBABILIDADE P
 
 ```{r}
 moeda <- function(p)  {
@@ -13,9 +17,38 @@ moeda <- function(p)  {
   } else {
     0
   }
+  
+}
+```
 
- }
 
-moeda(0.5) 
+### FUNCAO MOEDAS COM PROBABILIDADE P E N JOGADAS
+##### neste exercicio pensei de dois jeitos, mas creio que os dois acabaram tendo falhas que passaram despercebidas
+
+```{r}
+moedas <- function(n, moeda){
+  x  <- runif(i)
+  for (i in 1:n)
+    if(x < p) {
+      1
+    } else {
+      0
+    }
+}
+
+ou
+
+moedas <- function(n, p){
+    y <- 0
+    for (i in 1:n) {
+      y <- y + sample(1:2, prob = NULL)
+      return(y)
+      if(y < p) {
+        1
+      } else {
+        0
+      }
+    }
+}
 ```
 
